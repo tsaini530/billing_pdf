@@ -570,6 +570,10 @@ strong {
   position: relative;
 }
 
+.clear{
+  clear: both;
+  margin-bottom:10px; 
+}
 section img {
   max-width: 100%;
 }
