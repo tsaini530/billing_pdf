@@ -1,5 +1,13 @@
 <?php
-$codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
+ require('config.php');	
+$codelist=[];
+$sql= "SELECT  * FROM invoice WHERE invoice_name ='monarch' ";
+$stmt = $conn->query($sql); 
+$row =$stmt->fetchObject();
+$codeName=	 "SELECT code FROM sku ";
+ foreach ($conn->query($codeName) as $rows){
+ 	$codelist[]=$rows['code'];
+ }
 ?>
 <!DOCTYPE html>
 <html lang="en-IN">
@@ -17,13 +25,18 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
 <body  class="container">
 
 <form novalidate="false" method="post" action="billController.php">
+<input type="hidden" name="action" value="index">
 	<div class="panel">
-	<div class="panel-heading">
-		<span class="pull-left">Tin:1234567890</span>	<span class="pull-right">Mob:9928663963	</span>
+	 <div class="panel-heading">
+		<span class="pull-left">Tin:1234567890</span>	
+		<span class="pull-right">Mob:9928663963	</br>
+		<span>Invoice No:<?php echo $row->value;?></span></span>
 		<div class="clear" ></div>
 		<div class="form-inline pull-right form-group ">
 				<label  class="control-label" for="date">Date: </label>
 				<input type="text" name="date" id="date" class="form-control" value="<?php echo date('d M,Y') ;?>">
+				<input type="hidden" name="invoice_no"  value="<?php echo $row->value ;?>">
+
 		</div>
 		<div class="panel-title">
 		<h1 class="text-center "><strong> Monarch Art and frames</strong></h1>
@@ -32,31 +45,39 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
 	</div>
 	
 	<div class="panel-body">
-	<div class="form-inline ">
-		<div class="form-group col-xs-6 " >
+	<div class="row ">
+	<div class="col-md-6">
+		<div class="form-group  " >
 			<label class="control-label "  for="name">Name: </label>
 			<input type="text" name="name" id="name" class="form-control " value="">
 		</div>
-		<div class="form-group col-xs-6" >
+		</div>
+		<div class="col-md-6">
+
+		<div class="form-group " >
 			<label class="control-label "  for="mobile">Mob: </label>
-			<input type="text" name="mobile" id="mobile" class="form-control " value="">
+			<input type="number" name="mobile" id="mobile" class="form-control " value="">
+		</div>
 		</div>
 	</div>
 	<div class="clear"></div>
 
-	<div class="form-inline ">
-		<div class="form-group col-xs-6 " >
+	<div class="row ">
+	<div class="col-md-12">
+		<div class="form-group  " >
 			<label class="control-label "  for="address">Address: </label>
-			<textarea class="form-control" name="address" id="address"></textarea> 
+			<textarea class="form-control" name="address" id="address" cols="3" rows="3"></textarea> 
 		</div>
-		
+		</div>
 	</div>
 		<div class="clear"></div>
-
-	<div class=" form-inline ">
-	<div class="form-group col-xs-3" >
-			<label class="control-label "  for="code">code: </label>
+<hr>
+	<div class="row">
+	<div class="col-md-3">
+	<div class="form-group " >
+			<label class="control-label "  for="code">Code: </label>
 			<select class="form-control" id="code" >
+			<option value="">select a code</option>
 			<?php 
 			foreach ($codelist as $key => $value) {
 				echo "<option value='".$value."'>".$value."</option>";
@@ -65,16 +86,22 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
 				
 			</select>
 		</div>
-		<div class="form-group col-xs-3 " >
+		</div>
+			<div class="col-md-3">
+
+		<div class="form-group  " >
 			<label class="control-label "  for="qty">Qty: </label>
 			<input type="number" name="qty" id="qty" class="form-control " value="1">
 		</div>
-		<div class="form-group col-xs-3" >
+		</div>
+			<div class="col-md-3">
+
+		<div class="form-group " >
 			<label class="control-label "  for="price">Price: </label>
 			<input type="text" name="price" id="price" class="form-control " value="">
 		</div>
-		
-		<div class="text-right col-xs-3">
+		</div>
+		<div class=" col-md-3 text-right " style="margin-top:27px;">
 		<button type="button" class="btn btn-primary legitRipple adddetails">add details  <i class="icon-arrow-right14 position-right"></i></button></div>
 	</div>
 	<div class="clear"></div>
@@ -97,6 +124,7 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
 
 	<div class="text-right">
 		<button type="submit" class="btn btn-primary legitRipple">Submit form <i class="icon-arrow-right14 position-right"></i></button></div>
+		<button type="btton" class="btn btn-primary legitRipple" id="invoice">invoice generate <i class="icon-arrow-right14 position-right"></i></button></div>
 </div>
 </div>
 
@@ -108,14 +136,6 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
 
        $('.adddetails').on('click', function(){
             var code = $('#code').val();
-          /*  $.ajax({
-			type:'POST',
-			dataType:'json',
-			url:'./billController/getprice',
-			data:{code:code},
-			success:function(response){*/
-			//$('#price').val(response) ;
-				
             var price=$('#price').val();
             var qty=$('#qty').val();
             if(code != ''){
@@ -130,14 +150,17 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
                });
              
                $('.deal_table tbody').append(html);
-               $('#pcode').val('');
+               $('#qty').val('1');
+                $('#price').val('');
+                $('#code').val('');
+
             }
-			//}
+		
 
 		});
           
-       // });
-        $('#action,#savemodel').on('click',function(){
+      
+       /* $('#action,#savemodel').on('click',function(){
           var table = $('.deal_table');
         if(table.find('tbody').children().length > 0){
         $( '#dailydeal-form' ).submit();
@@ -147,8 +170,33 @@ $codelist=['MAF-01','MAF-02','MAF-03','MAF-04'];
         $('#error').delay(3000).fadeOut('slow');
 
         }
-        });
+        });*/
       
+      $('#invoice').on('click',function(){
+      	$.ajax({
+			type:'POST',
+			dataType:'json',
+			url:'./billController.php',
+			data:{action:'makePdf'},
+			success:function(response){
+				alert(response);
+			}
+		});
+      })
+
+      $("#code").on('change',function(){
+      	var code = $('#code').val();
+      	$.ajax({
+			type:'POST',
+			dataType:'json',
+			url:'./billController.php',
+			data:{code:code,action:'getprice'},
+			success:function(response){
+				alert(response);
+				$('#price').val(response);
+			}
+		});
+      });
        
 function removeSkurow(e){
 	 $(e).closest('tr').remove();

@@ -1,0 +1,12 @@
+{
+    "name": "vender/billing_pdf",
+    "authors": [
+        {
+            "name": "Tarun Saini",
+            "email": "tsaini530@gmail.com"
+        }
+    ],
+    "require": {
+  "mpdf/mpdf": "^6.0"
+}
+}
