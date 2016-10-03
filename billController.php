@@ -1,7 +1,5 @@
 <?php
- /**
- * 
- */
+
  $action = $_POST['action'];
  
  class billController{
@@ -68,8 +66,28 @@
 	}
 
 
-	function makePdf(){
-    header('Location: invoice.php?orderid=1');
+	function makePdf($id){
+	require(__DIR__ . '/vendor/autoload.php');
+    ob_start();
+    $orderid=$id;
+    include('invoice.php');
+    $html=ob_get_contents(); 
+    ob_end_clean();
+   
+   for($i=1;$i<=2;$i++){
+   	$mpdf=new \mPDF();
+   	if($i==1){
+   	 $mpdf->SetHeader('original');
+   	}
+   else{
+   	 $mpdf->SetHeader('duplicate');
+   }
+    $mpdf->writeHtml($html);
+    $filename='order-'.$orderid.'-'.$i.'pdf';
+    $mpdf->output($filename,'D');
+   }
+    
+    
 
 	}
 	function getprice(){

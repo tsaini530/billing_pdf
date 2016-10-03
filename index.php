@@ -2,8 +2,10 @@
  require('config.php');	
 $codelist=[];
 $sql= "SELECT  * FROM invoice WHERE invoice_name ='monarch' ";
-$stmt = $conn->query($sql); 
-$row =$stmt->fetchObject();
+$row = $conn->query($sql)->fetchObject(); 
+$tin="SELECT  * FROM invoice WHERE invoice_name ='tin' ";
+$tin_result = $conn->query($tin)->fetchObject(); 
+
 $codeName=	 "SELECT code FROM sku ";
  foreach ($conn->query($codeName) as $rows){
  	$codelist[]=$rows['code'];
@@ -24,11 +26,15 @@ $codeName=	 "SELECT code FROM sku ";
 </head>
 <body  class="container">
 
-<form novalidate="false" method="post" action="billController.php">
+ 
+<form novalidate="false" method="post" action="billController.php" id="invoice-form">
 <input type="hidden" name="action" value="index">
 	<div class="panel">
 	 <div class="panel-heading">
-		<span class="pull-left">Tin:1234567890</span>	
+	 	<div id="error" class="alert alert-danger row" style="display:none; padding: 6px;">
+                <p class="col-sm-6" style="margin-top: 5px;"> At least one product add for invoice  </p>
+       	</div>
+		<span class="pull-left">Tin:<?=$tin_result->value;?></span>	
 		<span class="pull-right">Mob:9928663963	</br>
 		<span>Invoice No:<?php echo $row->value;?></span></span>
 		<div class="clear" ></div>
@@ -123,8 +129,8 @@ $codeName=	 "SELECT code FROM sku ";
             </div>
 
 	<div class="text-right">
-		<button type="submit" class="btn btn-primary legitRipple">Submit form <i class="icon-arrow-right14 position-right"></i></button></div>
-		<button type="btton" class="btn btn-primary legitRipple" id="invoice">invoice generate <i class="icon-arrow-right14 position-right"></i></button></div>
+		<button type="button"  id="action" class="btn btn-primary legitRipple">Submit form </button>
+		<a href="setting.php" type="btton" class="btn btn-primary legitRipple pull-left" id="invoice">change Config</a></div>
 </div>
 </div>
 
@@ -160,17 +166,17 @@ $codeName=	 "SELECT code FROM sku ";
 		});
           
       
-       /* $('#action,#savemodel').on('click',function(){
+        $('#action').on('click',function(){
           var table = $('.deal_table');
         if(table.find('tbody').children().length > 0){
-        $( '#dailydeal-form' ).submit();
+        $( '#invoice-form' ).submit();
         }else{
-        $('#error').find('p').empty().append('At least one product add for deals ! ');
+        $('#error').find('p').empty().append('At least one product add for invoice ! ');
         $('#error').show();
         $('#error').delay(3000).fadeOut('slow');
 
         }
-        });*/
+        });
       
       $('#invoice').on('click',function(){
       	$.ajax({
@@ -192,7 +198,6 @@ $codeName=	 "SELECT code FROM sku ";
 			url:'./billController.php',
 			data:{code:code,action:'getprice'},
 			success:function(response){
-				alert(response);
 				$('#price').val(response);
 			}
 		});
