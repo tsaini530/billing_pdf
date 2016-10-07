@@ -82,7 +82,7 @@
    	 $mpdf->SetHeader('original');
    
     $mpdf->writeHtml($html);
-    $filename='order-'.$orderid.'-'.$i.'pdf';
+    $filename='order-'.$orderid.'pdf';
     $mpdf->output($filename,'D');
  	header("location: index.php");
     
@@ -110,7 +110,7 @@
 			$invoice[$value->invoice_name]=$value->value;
 		}
 
-			 print_r($invoice);exit();
+			 echo  json_encode($invoice);exit();
 	}
 }
 

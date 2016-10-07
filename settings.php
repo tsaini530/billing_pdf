@@ -25,7 +25,7 @@
 			<div class="col-md-4">
 				<div class="form-group " >
 					<label class="control-label "  for="vale">Value: </label>
-					<input type="text" name="invoice" id="value" class="form-control " value="">
+					<input type="text" name="invoice" id="invoice" class="form-control " value="">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -42,7 +42,7 @@
 			<div class="col-md-4">
 				<div class="form-group " >
 					<label class="control-label "  for="vale">Value: </label>
-					<input type="text" name="tin" id="value" class="form-control " value="">
+					<input type="text" name="tin" id="tin" class="form-control " value="">
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -60,8 +60,9 @@
 			url:'./billController.php',
 			data:{action:'getSettingData'},
 			success:function(response){
-				alert();
-				console.log( 'data',response);
+				$('#invoice').val(response.invoice_no);
+				$('#tin').val(response.tin);
+				
 				
 			}
 		});
