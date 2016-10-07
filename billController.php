@@ -1,7 +1,6 @@
 <?php
 
  $action = $_POST['action'];
- 
  class billController{
 
 	function execute($action) {
@@ -16,12 +15,16 @@
             case "makePdf":
             $this->makePdf();
             break;
+            case 'getSettingData':
+            	$this->getSettingData();
+            	break;
         }
     }
 
 
 	function index(){
-		require('config.php');
+		 require('config.php');
+
 		if(!empty($_POST)){
 		 	$total_price=0;
 			$new_date=date('Y-m-d',strtotime($_POST['date']));
@@ -52,7 +55,7 @@
 				}
 				$orderUpdate="UPDATE billorder SET total_price='$total_price' WHERE idorder='$orderid' ";
 				$dataUpdate=$conn->prepare($orderUpdate)->execute();
-				$invoiceUpdate="UPDATE invoice SET value='$invoice_value' WHERE invoice_name='monarch' ";
+				$invoiceUpdate="UPDATE invoice SET value='$invoice_value' WHERE invoice_name='invoice_no' ";
 				if($conn->prepare($invoiceUpdate)->execute()){
 					$this->makePdf($orderid);
 				}
@@ -73,25 +76,21 @@
     include('invoice.php');
     $html=ob_get_contents(); 
     ob_end_clean();
-   
-   for($i=1;$i<=2;$i++){
+ 
    	$mpdf=new \mPDF();
-   	if($i==1){
+   
    	 $mpdf->SetHeader('original');
-   	}
-   else{
-   	 $mpdf->SetHeader('duplicate');
-   }
+   
     $mpdf->writeHtml($html);
     $filename='order-'.$orderid.'-'.$i.'pdf';
     $mpdf->output($filename,'D');
-   }
+ 	header("location: index.php");
     
     
 
 	}
 	function getprice(){
-		require('config.php');	
+		 require('config.php');
 
 		$code=$_POST['code'];
 	 	$sql = "SELECT mrp FROM sku  WHERE code='$code'";
@@ -100,6 +99,18 @@
 	  		$result=$query->fetch(PDO::FETCH_OBJ);
 	  		echo json_encode($result->mrp);exit();
 	  	}
+	}
+	function getSettingData(){
+		 require('config.php');
+
+		$invoice=[];
+		$sql="SELECT  * FROM invoice ";
+		$result=$conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
+		foreach ($result as $key => $value) {
+			$invoice[$value->invoice_name]=$value->value;
+		}
+
+			 print_r($invoice);exit();
 	}
 }
 

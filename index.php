@@ -1,7 +1,7 @@
 <?php
  require('config.php');	
 $codelist=[];
-$sql= "SELECT  * FROM invoice WHERE invoice_name ='monarch' ";
+$sql= "SELECT  * FROM invoice WHERE invoice_name ='invoice_no' ";
 $row = $conn->query($sql)->fetchObject(); 
 $tin="SELECT  * FROM invoice WHERE invoice_name ='tin' ";
 $tin_result = $conn->query($tin)->fetchObject(); 
@@ -130,7 +130,7 @@ $codeName=	 "SELECT code FROM sku ";
 
 	<div class="text-right">
 		<button type="button"  id="action" class="btn btn-primary legitRipple">Submit form </button>
-		<a href="setting.php" type="btton" class="btn btn-primary legitRipple pull-left" id="invoice">change Config</a></div>
+		<a href="settings.php" type="btton" class="btn btn-primary legitRipple pull-left" id="invoice">change Config</a></div>
 </div>
 </div>
 
@@ -149,7 +149,7 @@ $codeName=	 "SELECT code FROM sku ";
                 var total_count = $('.deal_table tbody tr').length;
 
                 var tr = '<tr class=\"add_code\" id=\"'+code+'\"><td>' +  '<input type=\"text\" name=\"orderitem['+total_count+'][sku]\" value= \"'+code+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][price]\" value= \"'+price+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][qty]\" value= \"'+qty+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][tprice]\" value= \"'+(qty*price)+'\"  ></td>' 
-                    + '<td><div class=\"box-tools\"><button aria-hidden=\"true\" onclick=\"removeSkurow(this)\" class=\"close remRow\" type=\"button\">×</button></div></td>';
+                    + '<td><div class=\"box-tools\"><button aria-hidden=\"true\" onclick=\"removeSkurow(this)\" class=\"close remRow\" type=\"button\">X</button></div></td>';
                                  html = $(tr);
                     html.find('input').each(function(){
                   $(this).attr('name',$(this).attr('name').replace('count',total_count));
