@@ -9,13 +9,16 @@
 </head>
 <body>
 <div class="panel panel-white">
+<div class="alert alert-success" id="alert" role="alert" style="display:none;">
+   You successfully read this important alert message.
+</div>
 <div class="panel-heading ">
 	<h5 class="title">Change Confgration Data</h5>
 </div>
 
 	<div class="panel-body">
 		<h1 class="text-captilize text-bold text-center">setting data comming soon...	</h1>
-		<form class="row" id="form1">
+		<form class="row" id="invoiceForm">
 			<div class="col-md-4">
 				<div class="form-group " >
 					<label class="control-label "  for="name">Name: </label>
@@ -29,10 +32,10 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<button type="button" class="btn btn-teal legitRipple ">Update details  <i class="icon-arrow-right14 position-right"></i></button>
+				<button type="button" id="btnInvoice" class="btn btn-primary legitRipple ">Update details  <i class="icon-arrow-right14 position-right"></i></button>
 			</div>
 		</form>
-		<form class="row" id="form2">
+		<form class="row" id="tinForm">
 			<div class="col-md-4">
 				<div class="form-group " >
 					<label class="control-label "  for="name">Name: </label>
@@ -46,7 +49,7 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<button type="button" class="btn btn-primary legitRipple ">Update details  <i class="icon-arrow-right14 position-right"></i></button>
+				<button type="button" id="btnTin" class="btn btn-primary legitRipple ">Update details  <i class="icon-arrow-right14 position-right"></i></button>
 			</div>
 		</form>
 	</div>
@@ -68,5 +71,39 @@
 		});
 
 	});
+	   $('#btnInvoice').on('click',function(){
+    	var datastring = $("#invoiceForm").serialize();
+    	$.ajax({
+			type:'POST',
+			dataType:'json',
+			url:'./billController.php',
+			data:{ data:datastring,action:'updateInvoice'},
+			success:function(response){
+				$('#alert').show().empty().append('Invoice number successfully update');
+				$('#invoice').val(response);
+				 $('#alert').delay(3000).fadeOut('slow');
+				
+				
+			}
+		});
+	   });
+	   	   $('#btnTin').on('click',function(){
+    	var datastring = $("#tinForm").serialize();
+    	$.ajax({
+			type:'POST',
+			dataType:'json',
+			url:'./billController.php',
+			data:{data:datastring,action:'updateTin'},
+			success:function(response){
+				$('#alert').show().empty().append('Tin number successfully update');
+				$('#tin').val(response);
+				 $('#alert').delay(3000).fadeOut('slow');
+
+				
+				
+			}
+		});
+	   });
+
 </script>
 </html>

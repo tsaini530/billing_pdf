@@ -1,10 +1,13 @@
 <?php
-
+	
  $action = $_POST['action'];
+
  class billController{
+ 	protected $conn;
 
 	function execute($action) {
-
+		require('config.php');
+		$this->conn=$conn;
         switch($action) {
             case "index":
                 $this->index();
@@ -18,19 +21,23 @@
             case 'getSettingData':
             	$this->getSettingData();
             	break;
+        	case 'updateInvoice':
+	        	$this->updateInvoice();
+	        	break;
+	       	case 'updateTin':
+	       		$this->updateTin();
+	       		break;
         }
     }
 
 
 	function index(){
-		 require('config.php');
-
 		if(!empty($_POST)){
 		 	$total_price=0;
 			$new_date=date('Y-m-d',strtotime($_POST['date']));
 			$invoice_value=$_POST['invoice_no']+1;
 		    $sql = "INSERT INTO billorder (name,mobile,address,orderdate,invoice_no) VALUES (:name,:mobile,:address,:orderdate,:invoice_no)";
-			$query = $conn->prepare($sql);
+			$query = $this->conn->prepare($sql);
 			$order=$query->execute(array(
 				':name'=>$_POST['name'],
 				':mobile'=>$_POST['mobile'],
@@ -39,10 +46,10 @@
 				':invoice_no'=>$_POST['invoice_no']
 				));
 			if($order){
-				$orderid = $conn->lastInsertId();
+				$orderid = $this->conn->lastInsertId();
 				foreach ($_POST['orderitem'] as $key => $value) {
 					$orderitem="INSERT INTO itemorder (idorder,sku,qty,price) VALUES (:orderid,:sku,:qty,:price)";
-					$items=$conn->prepare($orderitem);
+					$items=$this->conn->prepare($orderitem);
 					$oitem=$items->execute([
 						':orderid'=>$orderid,
 						':sku'=>$value['sku'],
@@ -54,7 +61,7 @@
 					}
 				}
 				$orderUpdate="UPDATE billorder SET total_price='$total_price' WHERE idorder='$orderid' ";
-				$dataUpdate=$conn->prepare($orderUpdate)->execute();
+				$dataUpdate=$this->conn->prepare($orderUpdate)->execute();
 				$invoiceUpdate="UPDATE invoice SET value='$invoice_value' WHERE invoice_name='invoice_no' ";
 				if($conn->prepare($invoiceUpdate)->execute()){
 					$this->makePdf($orderid);
@@ -90,27 +97,39 @@
 
 	}
 	function getprice(){
-		 require('config.php');
-
 		$code=$_POST['code'];
 	 	$sql = "SELECT mrp FROM sku  WHERE code='$code'";
-	  	$query=$conn->prepare($sql);
+	  	$query=$this->conn->prepare($sql);
 	  	if($query->execute()){
 	  		$result=$query->fetch(PDO::FETCH_OBJ);
 	  		echo json_encode($result->mrp);exit();
 	  	}
 	}
 	function getSettingData(){
-		 require('config.php');
-
 		$invoice=[];
 		$sql="SELECT  * FROM invoice ";
-		$result=$conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
+		$result=$this->conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
 		foreach ($result as $key => $value) {
 			$invoice[$value->invoice_name]=$value->value;
 		}
 
 			 echo  json_encode($invoice);exit();
+	}
+	function updateInvoice(){
+		$data=$_POST['data'];
+		parse_str($data,$output);
+		$invoice=$output['invoice'];
+		$sql="UPDATE invoice SET value='$invoice' WHERE invoice_name='invoice_no' ";
+		$result=$this->conn->query($sql);
+		echo json_encode($invoice);exit();
+	}
+	function updateTin(){
+		$data=$_POST['data'];
+		parse_str($data,$output);
+		$invoice=$output['tin'];
+		$sql="UPDATE invoice SET value='$invoice' WHERE invoice_name='tin' ";
+		$result=$this->conn->query($sql);
+		echo json_encode($invoice);exit();
 	}
 }
 
