@@ -25,6 +25,7 @@ $codeName=	 "SELECT code FROM sku ";
 
 </head>
 <body  class="container">
+<div class="page-container">
 
  
 <form novalidate="false" method="post" action="billController.php" id="invoice-form">
@@ -135,7 +136,7 @@ $codeName=	 "SELECT code FROM sku ";
 </div>
 
 </form>
-
+</div>
 </body>
 <script type="text/javascript">
 
