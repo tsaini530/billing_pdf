@@ -15,50 +15,69 @@
 
 		<div class="panel">
 			<div class="panel-heading">
-				<h6 class="panel-title text-capitlize">Change Confgration Data</h6>
-					<a href="index.php" class="btn btn-primary pull-right legitRipple ">Home </a>
+				<h6 class="panel-title text-capitlize">Change Confgration Data <a href="index.php" class="btn btn-primary pull-right legitRipple ">Home </a></h6>
+					
 				<div class="alert alert-success" id="alert" role="alert" style="display:none;">
 				   You successfully read this important alert message.
 				</div>
 			</div>
 			<div class="panel-body">
-				<div class="col-md-2">
+				<div class="row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-8">
+						<form class="row" id="invoiceForm">
+							<div class="col-md-4">
+								<div class="form-group " >
+									<label class="control-label "  for="name">Name: </label>
+									<input type="text" name="name" id="name" class="form-control " value="Invoices No" readonly="true">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group " >
+									<label class="control-label "  for="vale">Value: </label>
+									<input type="text" name="invoice" id="invoice" class="form-control " value="">
+								</div>
+							</div>
+							<div class="col-md-4" style="margin-top:27px;">
+								<button type="button" id="btnInvoice" class="btn btn-primary legitRipple ">Update details </button>
+							</div>
+						</form>
+						<form class="row" id="tinForm">
+							<div class="col-md-4">
+								<div class="form-group " >
+									<label class="control-label "  for="name">Name: </label>
+									<input type="text" name="name" id="name" class="form-control " value="Tin No" readonly="true">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group " >
+									<label class="control-label "  for="vale">Value: </label>
+									<input type="text" name="tin" id="tin" class="form-control " value="">
+								</div>
+							</div>
+							<div class="col-md-4" style="margin-top:27px;">
+								<button type="button" id="btnTin" class="btn btn-primary legitRipple ">Update details </button>
+							</div>
+						</form>
+					</div>
 				</div>
-				<div class="col-md-8">
-				<form class="row" id="invoiceForm">
-					<div class="col-md-4">
-						<div class="form-group " >
-							<label class="control-label "  for="name">Name: </label>
-							<input type="text" name="name" id="name" class="form-control " value="Invoices No" readonly="true">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group " >
-							<label class="control-label "  for="vale">Value: </label>
-							<input type="text" name="invoice" id="invoice" class="form-control " value="">
-						</div>
-					</div>
-					<div class="col-md-4" style="margin-top:27px;">
-						<button type="button" id="btnInvoice" class="btn btn-primary legitRipple ">Update details </button>
-					</div>
-				</form>
-				<form class="row" id="tinForm">
-					<div class="col-md-4">
-						<div class="form-group " >
-							<label class="control-label "  for="name">Name: </label>
-							<input type="text" name="name" id="name" class="form-control " value="Tin No" readonly="true">
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="form-group " >
-							<label class="control-label "  for="vale">Value: </label>
-							<input type="text" name="tin" id="tin" class="form-control " value="">
-						</div>
-					</div>
-					<div class="col-md-4" style="margin-top:27px;">
-						<button type="button" id="btnTin" class="btn btn-primary legitRipple ">Update details </button>
-					</div>
-				</form>
+				<div class="row">
+				<button id="sku" class="btn btn-primary legitRipple ">Sku Details</button>
+				 <div class="form-group field-product-codes">
+                	<div class="col-lg-12" id="listitem">
+                    	<table class="table table-bordered deal_table">
+                        	<thead>
+		                        <th > Code</th>
+		                        <th >Name</th>
+		                        <th >Mrp</th>
+		                        <th > Action </th>
+		                    </thead>
+                        	<tbody>
+                       		 </tbody>
+                    	</table>
+                	</div>
+            	</div>
 				</div>
 			</div>
 		</div>

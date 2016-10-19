@@ -16,6 +16,7 @@ $codeName=	 "SELECT code FROM sku ";
 <head><title>Monarch</title>
 <link rel="stylesheet" type="text/css" href="./stylesheets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="./stylesheets/styles.css">
+
 <script src="javascripts/jquery-3.1.0.min.js"></script>
 <script src="javascripts/js/bootstrap.min.js"></script>
 <script src="javascripts/main.js"></script>
@@ -26,8 +27,6 @@ $codeName=	 "SELECT code FROM sku ";
 </head>
 <body  class="container">
 <div class="page-container">
-
- 
 <form novalidate="false" method="post" action="billController.php" id="invoice-form">
 <input type="hidden" name="action" value="index">
 	<div class="panel">
