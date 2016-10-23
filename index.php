@@ -16,19 +16,19 @@ $codeName=	 "SELECT code FROM sku ";
 <head><title>Monarch</title>
 <link rel="stylesheet" type="text/css" href="./stylesheets/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="./stylesheets/styles.css">
+ 
 
-<script src="javascripts/jquery-3.1.0.min.js"></script>
-<script src="javascripts/js/bootstrap.min.js"></script>
-<script src="javascripts/main.js"></script>
+
 
 
 
 
 </head>
-<body  class="container">
-<div class="page-container">
+<body  class="container" id="wrapper">
+<?php include('sidebar.html'); ?>
+<div class="page-container" id="page-content-wrapper">
 <form novalidate="false" method="post" action="billController.php" id="invoice-form">
-<input type="hidden" name="action" value="index">
+	<input type="hidden" name="action" value="index">
 	<div class="panel">
 	 <div class="panel-heading">
 	 	<div id="error" class="alert alert-danger row" style="display:none; padding: 6px;">
@@ -130,13 +130,18 @@ $codeName=	 "SELECT code FROM sku ";
 
 	<div class="text-right">
 		<button type="button"  id="action" class="btn btn-primary legitRipple">Submit form </button>
-		<a href="settings.php" type="btton" class="btn btn-primary legitRipple pull-left" id="invoice">change Config</a></div>
+	</div>
 </div>
 </div>
 
 </form>
 </div>
 </body>
+
+<script src="javascripts/jquery-3.1.0.min.js"></script>
+<script src="javascripts/js/bootstrap.min.js"></script>
+<script src="javascripts/main.js"></script>
+
 <script type="text/javascript">
 
 
@@ -149,7 +154,7 @@ $codeName=	 "SELECT code FROM sku ";
                 var total_count = $('.deal_table tbody tr').length;
 
                 var tr = '<tr class=\"add_code\" id=\"'+code+'\"><td>' +  '<input type=\"text\" name=\"orderitem['+total_count+'][sku]\" value= \"'+code+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][price]\" value= \"'+price+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][qty]\" value= \"'+qty+'\"></td><td><input type=\"text\" name=\"orderitem['+total_count+'][tprice]\" value= \"'+(qty*price)+'\"  ></td>' 
-                    + '<td><div class=\"box-tools\"><button aria-hidden=\"true\" onclick=\"removeSkurow(this)\" class=\"close remRow\" type=\"button\">X</button></div></td>';
+                    + '<td><div class=\"box-tools\"><button aria-hidden=\"true\" onclick=\"removeSkurow(this)\" class=\"close remRow\" type=\"button\"><span class="glyphicon glyphicon-trash"></button></div></td>';
                                  html = $(tr);
                     html.find('input').each(function(){
                   $(this).attr('name',$(this).attr('name').replace('count',total_count));
@@ -168,10 +173,12 @@ $codeName=	 "SELECT code FROM sku ";
       
         $('#action').on('click',function(){
           var table = $('.deal_table');
-        if(table.find('tbody').children().length > 0){
+          var name= $('#name').val();
+          var address= $('#address').val(); 
+        if(table.find('tbody').children().length > 0 && name!=='' && address!==''){
         $( '#invoice-form' ).submit();
         }else{
-        $('#error').find('p').empty().append('At least one product add for invoice ! ');
+        $('#error').find('p').empty().append('At Least Ane Product And User Information Add For Invoice ! ');
         $('#error').show();
         $('#error').delay(3000).fadeOut('slow');
 
@@ -207,5 +214,7 @@ function removeSkurow(e){
 	 $(e).closest('tr').remove();
 }
 	
+
 </script>
+
 </html>

@@ -72,10 +72,11 @@
 	   	$vat='';
 	   	$vat=round(($item->price*5.21)/100);
 	   	$itemprice=$item->price-$vat;
+	   	$pname=$conn->query("SELECT name FROM sku WHERE code ='$item->sku'")->fetchObject();
 	   	?>
    
     <tr>
-     <td style="border:1px solid #ddd;" ><?=$item->sku?>
+     <td style="border:1px solid #ddd;" ><?=$item->sku.'-'.$pname->name?>
             
         </td>
         <td  style="border:1px solid #ddd;" width="10%" align="center"><?=$item->qty?></td>

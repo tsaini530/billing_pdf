@@ -27,6 +27,12 @@
 	       	case 'updateTin':
 	       		$this->updateTin();
 	       		break;
+	       	case 'findByIdSku':
+	       		$this->findByIdSku();
+	       		break;
+	       	case 'updateSku':
+	       		$this->updateSku();
+	       		break;
         }
     }
 
@@ -63,7 +69,7 @@
 				$orderUpdate="UPDATE billorder SET total_price='$total_price' WHERE idorder='$orderid' ";
 				$dataUpdate=$this->conn->prepare($orderUpdate)->execute();
 				$invoiceUpdate="UPDATE invoice SET value='$invoice_value' WHERE invoice_name='invoice_no' ";
-				if($conn->prepare($invoiceUpdate)->execute()){
+				if($this->conn->prepare($invoiceUpdate)->execute()){
 					$this->makePdf($orderid);
 				}
 				//header("location: index.php");
@@ -91,9 +97,10 @@
     $mpdf->writeHtml($html);
     $filename='order-'.$orderid.'pdf';
     $mpdf->output($filename,'D');
- 	header("location: index.php");
-    
-    
+    $URL="index.php";
+	//echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+	echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+ 	//header("location: index.php");
 
 	}
 	function getprice(){
@@ -130,6 +137,43 @@
 		$sql="UPDATE invoice SET value='$invoice' WHERE invoice_name='tin' ";
 		$result=$this->conn->query($sql);
 		echo json_encode($invoice);exit();
+	}
+	function findByIdSku(){
+		$id=$_POST['data'];
+		$sql = "SELECT * FROM sku  WHERE idsku='$id'";
+		$result=$this->conn->query($sql)->fetch(PDO::FETCH_OBJ);
+		if(!empty($result)){
+			echo json_encode($result);exit();
+
+		}
+		else{
+			$result=[];
+			$result=["error"=>"can not find data"];
+			echo json_encode($result);exit();
+		}
+	}
+	function updateSku(){
+		$data=$_POST['data'];
+		parse_str($data,$output);
+		$id=$output['idsku'];
+		$code=$output['code'];
+		$name=$output['name'];
+		$mrp=$output['mrp'];
+		if(!empty($output['idsku'])){
+			$sql="UPDATE sku SET 
+				code='$code',
+				name='$name',
+				mrp='$mrp'
+				WHERE idsku='$id' ";
+			$result=$this->conn->prepare($sql)->execute();
+			echo json_encode("Update Sku  successfully");exit();
+
+		}
+		else{
+			$sql="INSERT INTO sku (name,code,mrp) VALUES (:name,:code,:mrp)";
+			$result=$this->conn->prepare($sql)->execute([':name'=>$name,':code'=>$code,':mrp'=>$mrp]);
+			echo json_encode("Insert  New Sku  successfully");exit();
+		}
 	}
 }
 
