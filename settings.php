@@ -104,23 +104,26 @@ $result=$conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
   <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
+        <div class="alert alert-danger" id="alert-model" role="alert" style="display:none;">
+				  please add value (*)reqired field
+		</div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 class="modal-title" id="exampleModalLabel">Sku Update</h4>
+          <h4 class="modal-title" id="exampleModalLabel">Sku Details</h4>
         </div>
         <div class="modal-body">
           <form id="skuForm">
              <div class="form-group">
-              <label for="name-sku" class="form-control-label">Sku Name:</label>
+              <label for="name-sku" class="form-control-label">Sku Name*:</label>
               <input type="text"  class="form-control" id="name-sku" name="name" value="">
             </div>
             <div class="form-group">
-              <label for="code" class="form-control-label">Code:</label>
+              <label for="code" class="form-control-label">Code*:</label>
               <input type="text"  class="form-control" id="code" name="code" value="">
             </div>
             <div class="form-group">
-              <label for="mrp" class="form-control-label">Mrp:</label>
+              <label for="mrp" class="form-control-label">Mrp*:</label>
               <input type="text" class="form-control" id="mrp" name="mrp" value="">
             </div>
             <input type="hidden" name="idsku" id="idsku" value="">
@@ -195,6 +198,10 @@ $result=$conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
 	   });
 	   	function addnew(){
 	   	$('#updateModal').modal('show');
+	   	$('#idsku').val('');
+		$('#code').val('');
+		$('#name-sku').val('');
+		$('#mrp').val('');
 	   	}
 	    function findSku(e){
 	    	$.ajax({
@@ -221,22 +228,30 @@ $result=$conn->query($sql)->fetchAll(PDO::FETCH_OBJ);
 		});
 	    }
 	    function updateSku(){
-	    var datastring = $("#skuForm").serialize();
-    	$.ajax({
-			type:'POST',
-			dataType:'json',
-			url:'./billController.php',
-			data:{data:datastring,action:'updateSku'},
-			success:function(response){
-				$('#updateModal').modal('hide');
-				$('#listitem').load(location.href+' #listitem');
-				$('#alert').show().empty().append(response);
-				 $('#alert').delay(3000).fadeOut('slow');
+		    var datastring = $("#skuForm").serialize();
+			var code=$('#code').val();
+			var name=$('#name-sku').val();
+			var mrp=$('#mrp').val();
+			if(code!==''&& name!=='' && mrp!==''){
+		    	$.ajax({
+					type:'POST',
+					dataType:'json',
+					url:'./billController.php',
+					data:{data:datastring,action:'updateSku'},
+					success:function(response){
+						$('#updateModal').modal('hide');
+						$('#listitem').load(location.href+' #listitem');
+						$('#alert').show().empty().append(response);
+						 $('#alert').delay(3000).fadeOut('slow');
 
-				
-				
-			}
-		});
+						
+						
+					}
+				});
+		    }
+		    else{
+		    		$('#alert-model').show();
+		    }
 	    }
 
 

@@ -67,10 +67,13 @@
 					}
 				}
 				$orderUpdate="UPDATE billorder SET total_price='$total_price' WHERE idorder='$orderid' ";
-				$dataUpdate=$this->conn->prepare($orderUpdate)->execute();
+				$dataUpdate=$this->conn->prepare($orderUpdate)->execute() or die();
 				$invoiceUpdate="UPDATE invoice SET value='$invoice_value' WHERE invoice_name='invoice_no' ";
 				if($this->conn->prepare($invoiceUpdate)->execute()){
 					$this->makePdf($orderid);
+				}
+				else{
+					 print_r($this->conn->prepare($invoiceUpdate)->errorInfo());die();
 				}
 				//header("location: index.php");
 			}
@@ -83,24 +86,24 @@
 
 
 	function makePdf($id){
-	require(__DIR__ . '/vendor/autoload.php');
-    ob_start();
-    $orderid=$id;
-    include('invoice.php');
-    $html=ob_get_contents(); 
-    ob_end_clean();
- 
-   	$mpdf=new \mPDF();
-   
-   	 $mpdf->SetHeader('original');
-   
-    $mpdf->writeHtml($html);
-    $filename='order-'.$orderid.'pdf';
-    $mpdf->output($filename,'D');
-    $URL="index.php";
-	//echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-	echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
- 	//header("location: index.php");
+		require(__DIR__ . '/vendor/autoload.php');
+	    ob_start();
+	    $orderid=$id;
+	    include('invoice.php');
+	    $html=ob_get_contents(); 
+	    ob_end_clean();
+	  
+	   	$mpdf=new \mPDF();
+	   	$mpdf->SetHeader('Original');
+	   	$mpdf->writeHtml($html);
+	   	$mpdf->SetHeader('Duplicate');
+		$mpdf->AddPage();
+		$mpdf->writeHtml($html);
+	   	$filename='order-'.$orderid.'.pdf';
+	   	$mpdf->output($filename,'D');
+	   	$URL="index.php";
+	   	echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+	   echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
 
 	}
 	function getprice(){
